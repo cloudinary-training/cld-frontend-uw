@@ -1,58 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload Widget example</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <title>Upload Widget example</title>
-</head>
+  <body>
+    <h3>Upload Widget Example</h3>
 
-<body>
-  <h3>Upload Widget Example</h3>
+    <button id="upload_widget" class="cloudinary-button">Upload files</button>
 
-  <button id="upload_widget" class="cloudinary-button">
-    Upload files
-  </button>
+    <p>
+      <a
+        href="https://cloudinary.com/documentation/upload_widget"
+        target="_blank"
+        >Upload Widget User Guide</a
+      >
+    </p>
+    <p>
+      <a
+        href="https://cloudinary.com/documentation/upload_widget_reference"
+        target="_blank"
+        >Upload Widget Reference</a
+      >
+    </p>
 
-  <p>
-    <a href="https://cloudinary.com/documentation/upload_widget" target="_blank">Upload Widget User Guide</a>
-  </p>
-  <p>
-    <a href="https://cloudinary.com/documentation/upload_widget_reference" target="_blank">Upload Widget Reference</a>
-  </p>
+    <img id="uploadedimage" src="" alt="" />
 
-  <img id="uploadedimage" src="" alt="">
+    <script
+      src="https://widget.cloudinary.com/v2.0/global/all.js"
+      type="text/javascript"
+    ></script>
 
-  <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript">
-  </script>
-
-  <script type="text/javascript">
-    const cloudName = "YOUR CLOUD NAME";
-    const uploadPreset = "YOUR UPLOAD PRESET";
-
-    const myWidget = cloudinary.createUploadWidget(
-      {
-        cloudName: cloudName,
-        uploadPreset: uploadPreset,
-      },
-      (error, result) => {
-        if (!error && result && result.event === "success") {
-          console.log("Done! Here is the image info: ", result.info);
-          document
-            .getElementById("uploadedimage")
-            .setAttribute("src", result.info.secure_url);
+    <script type="text/javascript">
+      const cloudName = "YOUR CLOUD NAME";
+      const uploadPreset = "YOUR UPLOAD PRESET";
+      const myWidget = cloudinary.createUploadWidget(
+        {
+          cloudName: cloudName,
+          uploadPreset: uploadPreset,
+          sources: ["local", "camera", "unsplash"],
+          showAdvancedOptions: true,
+          cropping: true,
+          multiple: false,
+          defaultSource: "local",
+          styles: {
+            palette: {
+              window: "#10173a",
+              sourceBg: "#20304b",
+              windowBorder: "#7171D0",
+              tabIcon: "#79F7FF",
+              inactiveTabIcon: "#8E9FBF",
+              menuIcons: "#CCE8FF",
+              link: "#72F1FF",
+              action: "#5333FF",
+              inProgress: "#00ffcc",
+              complete: "#33ff00",
+              error: "#cc3333",
+              textDark: "#000000",
+              textLight: "#ffffff",
+            },
+            fonts: {
+              default: null,
+              "'IBM Plex Sans', sans-serif": {
+                url: "https://fonts.googleapis.com/css?family=IBM+Plex+Sans",
+                active: true,
+              },
+            },
+          },
+        },
+        (error, result) => {
+          if (!error && result && result.event === "success") {
+            console.log("Done! Here is the image info: ", result.info);
+            document
+              .getElementById("uploadedimage")
+              .setAttribute("src", result.info.secure_url);
+          }
         }
-      }
-    );
+      );
 
-    document.getElementById("upload_widget").addEventListener(
-      "click",
-      function () {
-        myWidget.open();
-      }
-    );
-
-  </script>
-
-</body>
-
+      document
+        .getElementById("upload_widget")
+        .addEventListener("click", function () {
+          myWidget.open();
+        });
+    </script>
+  </body>
 </html>
