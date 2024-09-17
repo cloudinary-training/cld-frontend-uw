@@ -3,6 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <title>Upload Widget example</title>
+    <style>
+      #preview-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      #preview-container :is(video, img) {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+      }
+    </style>
   </head>
 
   <body>
@@ -25,7 +37,7 @@
       >
     </p>
 
-    <img id="uploadedimage" src="" alt="" />
+    <div id="preview-container"></div>
 
     <script
       src="https://widget.cloudinary.com/v2.0/global/all.js"
@@ -35,14 +47,14 @@
     <script type="text/javascript">
       const cloudName = "YOUR CLOUD NAME";
       const uploadPreset = "YOUR UPLOAD PRESET";
+
       const myWidget = cloudinary.createUploadWidget(
         {
           cloudName: cloudName,
           uploadPreset: uploadPreset,
           sources: ["local", "camera", "unsplash"],
           showAdvancedOptions: true,
-          cropping: true,
-          multiple: false,
+          multiple: true,
           defaultSource: "local",
           styles: {
             palette: {
@@ -71,10 +83,8 @@
         },
         (error, result) => {
           if (!error && result && result.event === "success") {
-            console.log("Done! Here is the image info: ", result.info);
-            document
-              .getElementById("uploadedimage")
-              .setAttribute("src", result.info.secure_url);
+            console.log("Done! Here is the asset info: ", result.info);
+            addAssetPreview(result.info);
           }
         }
       );
@@ -84,6 +94,21 @@
         .addEventListener("click", function () {
           myWidget.open();
         });
+
+      function addAssetPreview(assetInfo) {
+        const previewContainer = document.getElementById("preview-container");
+        const previewElement = document.createElement(
+          assetInfo.resource_type === "video" ? "video" : "img"
+        );
+
+        previewElement.src = assetInfo.secure_url;
+
+        if (assetInfo.resource_type === "video") {
+          previewElement.controls = true;
+        }
+
+        previewContainer.appendChild(previewElement);
+      }
     </script>
   </body>
 </html>
